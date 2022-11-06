@@ -334,23 +334,21 @@ export default {
             const o = [];
             for(let i = 0 ; i < word.word.length; i ++){
                 const pinyinArr=pinyin(word.word[i],{ toneType: 'num', type: 'array',multiple:true });
-                if(pinyinArr.length==1){
-                    o.push({letter:word.word[i],pinyin:pinyin(word.word[i])});
+                
+                const index = pinyinArr.findIndex(e=>e.replace('0','').replace('ü','v')==word.pinyin[i]);
+                if(index != -1){
+                    o.push({letter:word.word[i],pinyin:pinyin(word.word[i],{type:'array',multiple:true})[index]});
                 }else{
-                    const index = pinyinArr.findIndex(e=>e.replace('0','').replace('ü','v')==word.pinyin[i]);
-                    if(index != -1){
-                        o.push({letter:word.word[i],pinyin:pinyin(word.word[i],{type:'array',multiple:true})[index]});
+                    const tempArr = pinyin(word.word[i],{ toneType: 'none', type: 'array',multiple:true });
+                    const tempIndex = tempArr.findIndex(e=>e.replace('0','').replace('ü','v').replaceAll(/[0-4]/g,'')==word.pinyin[i]);
+                    if(tempIndex != -1){
+                        o.push({letter:word.word[i],pinyin:tempArr[tempIndex]});
                     }else{
-                        const tempArr = pinyin(word.word[i],{ toneType: 'none', type: 'array',multiple:true });
-                        const tempIndex = tempArr.findIndex(e=>e.replace('0','').replace('ü','v').replaceAll(/[0-4]/g,'')==word.pinyin[i]);
-                        if(tempIndex != -1){
-                            o.push({letter:word.word[i],pinyin:tempArr[tempIndex]});
-                        }else{
-                            o.push({letter:word.word[i],pinyin:' '});
-                        }
+                        o.push({letter:word.word[i],pinyin:' '});
                     }
-                    
                 }
+                    
+                
                                
             }
             word.print=o;
@@ -405,23 +403,21 @@ export default {
                             
                             for(let i = 0 ; i < word.word.length; i ++){
                                 const pinyinArr=pinyin(word.word[i],{ toneType: 'num', type: 'array',multiple:true });
-                                if(pinyinArr.length==1){
-                                    o.push({letter:word.word[i],pinyin:pinyin(word.word[i])});
+                                
+                                const index = pinyinArr.findIndex(e=>e.replace('0','').replace('ü','v')==word.pinyin[i]);
+                                if(index != -1){
+                                    o.push({letter:word.word[i],pinyin:pinyin(word.word[i],{type:'array',multiple:true})[index]});
                                 }else{
-                                    const index = pinyinArr.findIndex(e=>e.replace('0','').replace('ü','v')==word.pinyin[i]);
-                                    if(index != -1){
-                                        o.push({letter:word.word[i],pinyin:pinyin(word.word[i],{type:'array',multiple:true})[index]});
+                                    const tempArr = pinyin(word.word[i],{ toneType: 'none', type: 'array',multiple:true });
+                                    const tempIndex = tempArr.findIndex(e=>e.replace('0','').replace('ü','v').replaceAll(/[0-4]/g,'')==word.pinyin[i]);
+                                    if(tempIndex != -1){
+                                        o.push({letter:word.word[i],pinyin:tempArr[tempIndex]});
                                     }else{
-                                        const tempArr = pinyin(word.word[i],{ toneType: 'none', type: 'array',multiple:true });
-                                        const tempIndex = tempArr.findIndex(e=>e.replace('0','').replace('ü','v').replaceAll(/[0-4]/g,'')==word.pinyin[i]);
-                                        if(tempIndex != -1){
-                                            o.push({letter:word.word[i],pinyin:tempArr[tempIndex]});
-                                        }else{
-                                            o.push({letter:word.word[i],pinyin:' '});
-                                        }
+                                        o.push({letter:word.word[i],pinyin:' '});
                                     }
-                                    
                                 }
+                                    
+                                
                             }
                             word.print=o;
                             printed.push(word);
