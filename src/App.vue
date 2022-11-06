@@ -242,6 +242,32 @@ export default {
     },
     data(){
         const logo = '看拼音写词语';
+        
+        const learnt = JSON.parse(JSON.stringify(cibiao));
+        let words = '';
+        try{
+            const selected = window.localStorage.getItem('selected');
+            if(selected){
+                const selectClass=JSON.parse(selected);
+                for(let item of selectClass){                    
+                    cl:for(let book in learnt){
+                        if(item.title == learnt[book].title){
+                            learnt[book].checked = true;
+                            break;
+                        }
+                        for(let clas of learnt[book].children){
+                            if(clas.data==item.data){
+                                clas.checked = true;
+                                words += item.data;
+                                break cl;
+                            }
+                        }
+                    }
+                }
+            }
+        }catch(e){
+            window.localStorage.removeItem('selected');
+        }
         return {
             spinShow:false,
             currentCiku:{},
@@ -253,7 +279,7 @@ export default {
             }),
             formItem:{
                 checkWords:'',
-                learntWords:'',
+                learntWords:words,
                 total:48,
                 title:'看拼音写词语',
                 subTitle:'☆☆☆'
@@ -269,7 +295,7 @@ export default {
                 ],
             },
             printArray:[],
-            cibiao:JSON.parse(JSON.stringify(cibiao)),
+            cibiao:learnt,
             checkCi:JSON.parse(JSON.stringify(cibiao)),
         };
     },
@@ -277,6 +303,7 @@ export default {
         remove(i){
             const word = this.printArray.splice(i,1)[0];
             word.show=false;
+            this.formItem.total--;
             for(let i = 0 ; i < word.word.length;i++){
                 for(let j = 0; j < this.currentCiku.length; j++){
                     if(this.currentCiku[j].letter==word.word[i]){
@@ -288,10 +315,13 @@ export default {
         },
         select(nodes){
             let letter='';
+            const list = [];
             nodes.forEach(e=>{
                 letter=letter+(e.data?e.data:'');
+                list.push({title:e.title,data:e.data});
             });
             this.formItem.learntWords=letter;
+            window.localStorage.setItem('selected',JSON.stringify(list));
         },
         selectCi(nodes){
             let letter='';
